@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var store = require('./routes/store');
 
 var app = express();
 
@@ -23,7 +23,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/men', store);
+app.use('/women', store);
+app.use('/kids', store);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,4 +45,20 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// connect to MongoDB 
+var MongoClient = require('mongodb').MongoClient;
+var db;
+
+// connection
+MongoClient.connect("mongodb://public:granted@ds157677.mlab.com:57677/shotimedb", function(err, database){
+  if(err) return console.log(err);
+  db = database;
+  app.listen(3000, () =>{
+    console.log('listening on 3000');
+  });
+});
+
 module.exports = app;
+
+
+
